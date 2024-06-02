@@ -1,6 +1,8 @@
 package igu;
 
 import java.util.List;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import logica.Auto;
 import logica.Controllers;
@@ -8,12 +10,11 @@ import logica.Controllers;
 public class VerAuto extends javax.swing.JFrame {
 
     Controllers controlador = null;
+
     public VerAuto() {
         controlador = new Controllers();
         initComponents();
     }
-
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -69,8 +70,18 @@ public class VerAuto extends javax.swing.JFrame {
         );
 
         btnEliminar.setText("Eliminar");
+        btnEliminar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEliminarActionPerformed(evt);
+            }
+        });
 
         btnActualilzar.setText("Actualizar");
+        btnActualilzar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnActualilzarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -123,6 +134,72 @@ public class VerAuto extends javax.swing.JFrame {
         cargarTabla();
     }//GEN-LAST:event_formWindowOpened
 
+    public void mostrarMensaje(String mensaje, String tipo, String titulo) {
+        JOptionPane optionpane = new JOptionPane(mensaje);
+        if (tipo.equals("info")) {
+            optionpane.setMessageType(JOptionPane.INFORMATION_MESSAGE);
+        } else if (tipo.equals("error")) {
+            optionpane.setMessageType(JOptionPane.ERROR_MESSAGE);
+        }
+
+        JDialog dialogo = optionpane.createDialog(titulo);
+        dialogo.setAlwaysOnTop(true);
+        dialogo.setVisible(true);
+
+    }
+
+
+    private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
+        //eliminar datos
+
+        if (tablaAuto.getRowCount() > 0) {
+            if (tablaAuto.getSelectedRow() != -1) {
+                int id = Integer.parseInt(String.valueOf(tablaAuto.getValueAt(tablaAuto.getSelectedRow(), 0)));
+                //llamar a borrar
+                controlador.borrarAuto(id);
+
+                mostrarMensaje("se elimino correctamente", "info", "eliminacion exitosa");
+
+                cargarTabla();
+
+            } else {
+                mostrarMensaje("no elimino correctamente", "error", "eliminacion error");
+
+            }
+        } else {
+            mostrarMensaje("no elimino correctamente", "error", "eliminacion error");
+        
+        }
+    }//GEN-LAST:event_btnEliminarActionPerformed
+
+    private void btnActualilzarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualilzarActionPerformed
+        //
+        if(tablaAuto.getRowCount()>0){
+            if(tablaAuto.getSelectedRow()!=-1){
+                int id = Integer.parseInt(String.valueOf(tablaAuto.getValueAt(tablaAuto.getSelectedRow(),0)));
+                
+                EditarAuto editar = new EditarAuto(id);
+                editar.setVisible(true);
+                editar.setLocationRelativeTo(null);
+                
+                
+                
+            }
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    }//GEN-LAST:event_btnActualilzarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnActualilzar;
@@ -134,44 +211,35 @@ public class VerAuto extends javax.swing.JFrame {
     private javax.swing.JTable tablaAuto;
     // End of variables declaration//GEN-END:variables
 
+    private void cargarTabla() {
 
-    
-    private void cargarTabla(){
-        
-        DefaultTableModel tabla = new DefaultTableModel(){
-            
+        DefaultTableModel tabla = new DefaultTableModel() {
+
             @Override
-            public boolean isCellEditable(int row,int column){
+            public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
-        
+
         //establecer los nombres de las columnas para ver cuales son
-        
-            String titulos[] = {"ID","modelo","motor","color","patente","n.Puerta"};
-            tabla.setColumnIdentifiers(titulos);
-            
-            //cargar los datos de la base de datos
-            List<Auto> listaAuto = controlador.traerAuto();
-            
-            
-            //recorrerLista y mostrar los elemntos de la tabla
-            if(listaAuto != null){
-                for(Auto aut : listaAuto){
-                    Object[] objeto = {aut.getId(),aut.getModelo(),aut.getMotor(),aut.getColor(),aut.getPatente(),aut.getCantidadPuertas()};
-                    
-                    tabla.addRow(objeto);
-                
-                }
+        String titulos[] = {"ID", "marca", "modelo", "motor", "color", "patente", "n.Puerta"};
+        tabla.setColumnIdentifiers(titulos);
+
+        //cargar los datos de la base de datos
+        List<Auto> listaAuto = controlador.traerAuto();
+
+        //recorrerLista y mostrar los elemntos de la tabla
+        if (listaAuto != null) {
+            for (Auto aut : listaAuto) {
+                Object[] objeto = {aut.getId(), aut.getMarca(), aut.getModelo(), aut.getMotor(), aut.getColor(), aut.getPatente(), aut.getCantidadPuertas()};
+
+                tabla.addRow(objeto);
+
             }
-            
-            tablaAuto.setModel(tabla);
-        
-        
-        
+        }
+
+        tablaAuto.setModel(tabla);
+
     }
 
-
-
 }
-
