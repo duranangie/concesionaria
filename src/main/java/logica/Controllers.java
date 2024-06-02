@@ -30,6 +30,38 @@ public class Controllers {
      
             return controlPersistencia.traerTabla();
     }
+
+    public void borrarAuto(int id) {
+        controlPersistencia.borrarCorre( id);
+
+
+    }
+
+    public Auto mostrarDatos(int id) {
+        return controlPersistencia.mostrarDato(id);
+
+    }
+
+    public void modificarAuto(Auto auto, String modelo, String marca, String motor, String color, int patente, String cantidadPuerta) {
+            auto.setModelo(modelo);
+            auto.setMarca(marca);
+            auto.setMotor(motor);
+            auto.setColor(color);
+            auto.setPatente(patente);
+            auto.setCantidadPuertas(cantidadPuerta);
+            
+            
+            controlPersistencia.modificarAutomovil(auto);
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    }
            
     
 }
